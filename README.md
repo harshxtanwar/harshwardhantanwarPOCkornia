@@ -7,7 +7,7 @@
    - [Main Objective](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#1-main-objective)
    - [Workflow and how exactly I will proceed with the project](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#2-workflow-and-how-exactly-i-will-proceed-with-the-project)
 3. [Implementation Example, Missing Torch Frontend](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#implementation-example-missing-torch-frontend)
-   - [Pytorch Geometric's Code](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#1-pytorch-geometrics-code)
+   - [Pytorch Geometric's Code](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#1-pytorch-geometrics-code)
    - [Ivy's existing code for torch.bincount](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#2-ivys-existing-code-for-torchbincount)
    - [Solution](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#3-solution---implementing-torchs-frontend-for-torchbincount)
 
@@ -138,7 +138,7 @@ function in this directory at this [link]([https://github.com/pyg-team/pytorch_g
 
 
 ### 1. Pytorch Geometric's Code
-View the link above to view the exact location of PyG's functio and torch.bincount in their repository in github
+View the link above to view the exact location of kornia's function and torch.bincount in their repository in github
 
 ```
 import torch
