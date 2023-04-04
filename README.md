@@ -137,7 +137,7 @@ kornia/kornia/metrics/confusion_matrix.py directory and you can view the use of 
 function in this directory at this [link]([https://github.com/pyg-team/pytorch_geometric/blob/7469edee6edae1afd8a9dc61b1494ec6412195aa/torch_geometric/nn/aggr/quantile.py#L78](https://github.com/kornia/kornia/blob/da2f1325014a158be36d62bdd20293ef97e574f4/kornia/metrics/confusion_matrix.py))
 
 
-### 1. Pytorch Geometric's Code
+### 1. Kornia's Code
 View the link above to view the exact location of kornia's function and torch.bincount in their repository in github
 
 ```
