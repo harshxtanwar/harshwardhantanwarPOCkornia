@@ -9,7 +9,7 @@
 3. [Implementation Example, Missing Torch Frontend](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#implementation-example-missing-torch-frontend)
    - [Kornia's Code](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#1-kornias-code)
    - [Ivy's existing code for torch.bincount](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#2-ivys-existing-code-for-torchbincount)
-   - [Solution](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#3-solution---implementing-torchs-frontend-for-torchbincount)
+   - [Solution](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#3-solution---implementing-torchs-frontend-for-torchbincount)
 
 ## My understanding with Ivy's transpiler
 In this section, I aim to convey to you my understanding of Ivy's transpiler. I will talk about how
