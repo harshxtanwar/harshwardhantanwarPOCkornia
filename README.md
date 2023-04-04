@@ -4,7 +4,7 @@
    - [Transpiling functions eagerly](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#1-transpiling-function-eagerly)
    - [Ivy transpiling Functions, Models and Frameworks !](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#2-ivy-transpiling-functions-models-and-frameworks-)
 2. [Objective of the project](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#objective-of-the-project)
-   - [Main Objective](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#1-main-objective)
+   - [Main Objective](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia#1-main-objective)
    - [Workflow and how exactly I will proceed with the project](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#2-workflow-and-how-exactly-i-will-proceed-with-the-project)
 3. [Implementation Example, Missing Torch Frontend](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#implementation-example-missing-torch-frontend)
    - [Pytorch Geometric's Code](https://github.com/harshxtanwar/harshwardhantanwarPOC/blob/main/README.md#1-pytorch-geometrics-code)
