@@ -132,70 +132,84 @@ and creating another list of functions that need to be implemented for all backe
 
 ## Implementation Example, Missing Torch Frontend
 
-torch.bincount function is one such function which is used in Pyg, in the 
-pytorch_geometric/torch_geometric/nn/aggr/quantile.py directory and you can view the use of torch.bincount
-function in this directory at this [link](https://github.com/pyg-team/pytorch_geometric/blob/7469edee6edae1afd8a9dc61b1494ec6412195aa/torch_geometric/nn/aggr/quantile.py#L78)
+torch.bincount function is one such function which is used in Kornia, in the 
+kornia/kornia/metrics/confusion_matrix.py directory and you can view the use of torch.bincount
+function in this directory at this [link]([https://github.com/pyg-team/pytorch_geometric/blob/7469edee6edae1afd8a9dc61b1494ec6412195aa/torch_geometric/nn/aggr/quantile.py#L78](https://github.com/kornia/kornia/blob/da2f1325014a158be36d62bdd20293ef97e574f4/kornia/metrics/confusion_matrix.py))
 
 
 ### 1. Pytorch Geometric's Code
 View the link above to view the exact location of PyG's functio and torch.bincount in their repository in github
 
 ```
-    def forward(self, x: Tensor, index: Optional[Tensor] = None,
-                ptr: Optional[Tensor] = None, dim_size: Optional[int] = None,
-                dim: int = -2) -> Tensor:
+import torch
 
-        dim = x.dim() + dim if dim < 0 else dim
+# Inspired by:
+# https://github.com/pytorch/tnt/blob/master/torchnet/meter/confusionmeter.py#L68-L73
 
-        self.assert_index_present(index)
-        assert index is not None  # Required for TorchScript.
 
-        count = torch.bincount(index, minlength=dim_size or 0)
-        cumsum = torch.cumsum(count, dim=0) - count
+def confusion_matrix(
+    input: torch.Tensor, target: torch.Tensor, num_classes: int, normalized: bool = False
+) -> torch.Tensor:
+    r"""Compute confusion matrix to evaluate the accuracy of a classification.
+    Args:
+        input: tensor with estimated targets returned by a
+          classifier. The shape can be :math:`(B, *)` and must contain integer
+          values between 0 and K-1.
+        target: tensor with ground truth (correct) target
+          values. The shape can be :math:`(B, *)` and must contain integer
+          values between 0 and K-1, where targets are assumed to be provided as
+          one-hot vectors.
+        num_classes: total possible number of classes in target.
+        normalized: whether to return the confusion matrix normalized.
+    Returns:
+        a tensor containing the confusion matrix with shape
+        :math:`(B, K, K)` where K is the number of classes.
+    Example:
+        >>> logits = torch.tensor([[0, 1, 0]])
+        >>> target = torch.tensor([[0, 1, 0]])
+        >>> confusion_matrix(logits, target, num_classes=3)
+        tensor([[[2., 0., 0.],
+                 [0., 1., 0.],
+                 [0., 0., 0.]]])
+    """
+    if not torch.is_tensor(input) and input.dtype is not torch.int64:
+        raise TypeError("Input input type is not a torch.Tensor with " "torch.int64 dtype. Got {}".format(type(input)))
 
-        q_point = self.q * (count - 1) + cumsum
-        q_point = q_point.t().reshape(-1)
+    if not torch.is_tensor(target) and target.dtype is not torch.int64:
+        raise TypeError(
+            "Input target type is not a torch.Tensor with " "torch.int64 dtype. Got {}".format(type(target))
+        )
+    if not input.shape == target.shape:
+        raise ValueError(
+            "Inputs input and target must have the same shape. " "Got: {} and {}".format(input.shape, target.shape)
+        )
+    if not input.device == target.device:
+        raise ValueError("Inputs must be in the same device. " "Got: {} - {}".format(input.device, target.device))
 
-        shape = [1] * x.dim()
-        shape[dim] = -1
-        index = index.view(shape).expand_as(x)
+    if not isinstance(num_classes, int) or num_classes < 2:
+        raise ValueError("The number of classes must be an integer bigger " "than two. Got: {}".format(num_classes))
 
-        # Two sorts: the first one on the value,
-        # the second (stable) on the indices:
-        x, x_perm = torch.sort(x, dim=dim)
-        index = index.take_along_dim(x_perm, dim=dim)
-        index, index_perm = torch.sort(index, dim=dim, stable=True)
-        x = x.take_along_dim(index_perm, dim=dim)
+    batch_size: int = input.shape[0]
 
-        # Compute the quantile interpolations:
-        if self.interpolation == 'lower':
-            quantile = x.index_select(dim, q_point.floor().long())
-        elif self.interpolation == 'higher':
-            quantile = x.index_select(dim, q_point.ceil().long())
-        elif self.interpolation == 'nearest':
-            quantile = x.index_select(dim, q_point.round().long())
-        else:
-            l_quant = x.index_select(dim, q_point.floor().long())
-            r_quant = x.index_select(dim, q_point.ceil().long())
+    # hack for bitcounting 2 arrays together
+    # NOTE: torch.bincount does not implement batched version
+    pre_bincount: torch.Tensor = input + target * num_classes
+    pre_bincount_vec: torch.Tensor = pre_bincount.view(batch_size, -1)
 
-            if self.interpolation == 'linear':
-                q_frac = q_point.frac().view(shape)
-                quantile = l_quant + (r_quant - l_quant) * q_frac
-            else:  # 'midpoint'
-                quantile = 0.5 * l_quant + 0.5 * r_quant
+    confusion_list = []
+    for iter_id in range(batch_size):
+        pb: torch.Tensor = pre_bincount_vec[iter_id]
+        bin_count: torch.Tensor = torch.bincount(pb, minlength=num_classes**2)
+        confusion_list.append(bin_count)
 
-        # If the number of elements is zero, fill with pre-defined value:
-        mask = (count == 0).repeat_interleave(self.q.numel()).view(shape)
-        out = quantile.masked_fill(mask, self.fill_value)
+    confusion_vec: torch.Tensor = torch.stack(confusion_list)
+    confusion_mat: torch.Tensor = confusion_vec.view(batch_size, num_classes, num_classes).to(torch.float32)  # BxKxK
 
-        if self.q.numel() > 1:
-            shape = list(out.shape)
-            shape = (shape[:dim] + [shape[dim] // self.q.numel(), -1] +
-                     shape[dim + 2:])
-            out = out.view(shape)
+    if normalized:
+        norm_val: torch.Tensor = torch.sum(confusion_mat, dim=1, keepdim=True)
+        confusion_mat = confusion_mat / (norm_val + 1e-6)
 
-        return out
-
+    return 
 ```
 ### 2. Ivy's existing code for torch.bincount
 
