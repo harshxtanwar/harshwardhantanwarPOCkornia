@@ -1,6 +1,6 @@
 # Proof of Concept for Kornia - Transpiler Project for Ivy
 
-1. [My understanding with Ivy's transpiler](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia#my-understanding-with-ivys-transpiler)
+1. [My understanding with Ivy's transpiler](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#my-understanding-with-ivys-transpiler)
    - [Transpiling functions eagerly](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#1-transpiling-function-eagerly)
    - [Ivy transpiling Functions, Models and Frameworks !](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#2-ivy-transpiling-functions-models-and-frameworks-)
 2. [Objective of the project](https://github.com/harshxtanwar/harshwardhantanwarPOCkornia/blob/main/README.md#objective-of-the-project)
